@@ -10,7 +10,8 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { Prisma } from '@prisma/client';
+import { CreateUserDto } from './dto/create-user-dto';
+import { UpdateUserDto } from './dto/update-user-dto';
 
 @Controller('users')
 export class UsersController {
@@ -18,8 +19,13 @@ export class UsersController {
 
   @Post()
   @UsePipes(new ValidationPipe())
-  create(@Body() data: Prisma.UserCreateInput) {
+  create(@Body() data: CreateUserDto) {
     return this.usersService.createUser(data);
+  }
+
+  @Get()
+  findAll() {
+    return this.usersService.findAllUsers();
   }
 
   @Get(':userId')
@@ -28,15 +34,12 @@ export class UsersController {
   }
 
   @Patch(':userId')
-  update(
-    @Param('userId') userId: Prisma.UserWhereUniqueInput,
-    @Body() data: Prisma.UserUpdateInput,
-  ) {
-    return this.usersService.updateUser({ userId, data });
+  update(@Param('userId') userId: string, @Body() data: UpdateUserDto) {
+    return this.usersService.updateUser(userId, data);
   }
 
   @Delete(':userId')
-  remove(@Param('userId') userId: Prisma.UserWhereUniqueInput) {
+  remove(@Param('userId') userId: string) {
     return this.usersService.deleteUser(userId);
   }
 }
