@@ -12,5 +12,6 @@ import { CharactersModule } from 'src/characters/characters.module';
   ],
   controllers: [PartiesController],
   providers: [PartiesService],
+  exports: [PartiesService],
 })
 export class PartiesModule {}

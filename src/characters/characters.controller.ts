@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { CharactersService } from './characters.service';
 import { CreateCharacterDto } from './dto/create-character-dto';
+import { Types } from 'mongoose';
 
 @Controller('characters')
 export class CharactersController {
@@ -39,5 +40,18 @@ export class CharactersController {
     data: { reason: 'levelUp' | 'levelDown' | 'edit'; newLevel?: number },
   ) {
     return this.charactersService.changeCharacterLevel(characterId, data);
+  }
+
+  @Patch(':characterId/parties')
+  updateCharacterParties(
+    @Param('characterId') characterId: string,
+    @Body()
+    data: { reason: 'add' | 'delete'; partyId: Types.ObjectId },
+  ) {
+    return this.charactersService.updateCharacterParties(
+      data.reason,
+      characterId,
+      data.partyId,
+    );
   }
 }

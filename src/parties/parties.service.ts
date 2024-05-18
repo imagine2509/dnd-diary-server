@@ -36,4 +36,23 @@ export class PartiesService {
     const deletedParty = await this.partyModel.findByIdAndDelete(partyId);
     return deletedParty;
   }
+
+  async updatePartyPlaces(
+    reason: 'add' | 'delete',
+    partyId: Types.ObjectId,
+    partyPlaceId: Types.ObjectId,
+  ) {
+    const editableParty = await this.getPartyById(partyId);
+    switch (reason) {
+      case 'add':
+        editableParty.partyPlaces.push(partyPlaceId);
+        break;
+      case 'delete':
+        editableParty.partyPlaces.splice(
+          editableParty.partyPlaces.indexOf(partyPlaceId),
+          1,
+        );
+        break;
+    }
+  }
 }
