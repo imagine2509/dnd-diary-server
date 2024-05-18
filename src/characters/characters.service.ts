@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Character } from './schemas/character.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { UsersService } from 'src/users/users.service';
 import { UpdateUserDto } from 'src/users/dto/update-user-dto';
 
@@ -12,6 +12,13 @@ export class CharactersService {
     private readonly characterModel: Model<Character>,
     private readonly usersService: UsersService,
   ) {}
+
+  async getCharacterById(id: string): Promise<Character> {
+    const character = await this.characterModel.findById(id).exec();
+    if (!character)
+      throw new NotFoundException(`Character with ID "${id}" not found.`);
+    return character;
+  }
 
   async createCharacter(
     character: Character,
@@ -67,5 +74,24 @@ export class CharactersService {
       editedCharacter,
     );
     return updatedCharacter;
+  }
+
+  async updateCharacterParties(
+    reason: 'add' | 'delete',
+    characterId: string,
+    partyId: Types.ObjectId,
+  ) {
+    const editableCharacter = await this.getCharacterById(characterId);
+    switch (reason) {
+      case 'add':
+        editableCharacter.partyIds.push(partyId);
+        break;
+      case 'delete':
+        editableCharacter.partyIds.splice(
+          editableCharacter.partyIds.indexOf(partyId),
+          1,
+        );
+        break;
+    }
   }
 }
