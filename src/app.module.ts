@@ -4,6 +4,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CharactersModule } from './characters/characters.module';
 import { PartiesModule } from './parties/parties.module';
 import { PartyPlaceModule } from './party_place/party_place.module';
+import { PartyMembersModule } from './party_members/party_members.module';
+import { PartyGamesModule } from './party_games/party_games.module';
 
 @Module({
   imports: [
@@ -12,6 +14,8 @@ import { PartyPlaceModule } from './party_place/party_place.module';
     CharactersModule,
     PartiesModule,
     PartyPlaceModule,
+    PartyMembersModule,
+    PartyGamesModule,
   ],
 })
 export class AppModule {}

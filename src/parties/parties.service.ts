@@ -55,4 +55,23 @@ export class PartiesService {
         break;
     }
   }
+
+  async updatePartyMembers(
+    reason: 'add' | 'delete',
+    partyId: Types.ObjectId,
+    partyMemberId: Types.ObjectId,
+  ) {
+    const editableParty = await this.getPartyById(partyId);
+    switch (reason) {
+      case 'add':
+        editableParty.partyMembers.push(partyMemberId);
+        break;
+      case 'delete':
+        editableParty.partyMembers.splice(
+          editableParty.partyMembers.indexOf(partyMemberId),
+          1,
+        );
+        break;
+    }
+  }
 }

@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 
-export type CharacterDocument = HydratedDocument<Party>;
+export type PartyDocument = HydratedDocument<Party>;
 
 @Schema()
 export class Party {
@@ -10,6 +10,9 @@ export class Party {
 
   @Prop({ type: Types.ObjectId, ref: 'PartyPlaces' })
   partyPlaces: Types.ObjectId[];
+
+  @Prop({ type: Types.ObjectId, ref: 'PartyMembers' })
+  partyMembers: Types.ObjectId[];
 }
 
 export const PartySchema = SchemaFactory.createForClass(Party);
