@@ -4,7 +4,7 @@ import { PartyPlace } from './schemas/party-place-schema';
 import { PartiesService } from 'src/parties/parties.service';
 import { Model, Types } from 'mongoose';
 import { CreatePartyPlaceDto } from './dto/create-party-place-dto';
-import { UpdatePartyDto } from 'src/parties/dto/update-party-dto';
+import { UpdatePartyPlaceDto } from './dto/update-party-place-dto';
 
 @Injectable()
 export class PartyPlaceService {
@@ -48,7 +48,7 @@ export class PartyPlaceService {
 
   async editPartyPlaceDescription(
     partyPlaceId: Types.ObjectId,
-    data: UpdatePartyDto,
+    data: UpdatePartyPlaceDto,
   ): Promise<PartyPlace> {
     const updatedPartyPlace = this.partyPlaceModel.findByIdAndUpdate(
       partyPlaceId,

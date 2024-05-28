@@ -74,4 +74,23 @@ export class PartiesService {
         break;
     }
   }
+
+  async updatePartyQuests(
+    reason: 'add' | 'delete',
+    partyId: Types.ObjectId,
+    partyQuestId: Types.ObjectId,
+  ) {
+    const editableParty = await this.getPartyById(partyId);
+    switch (reason) {
+      case 'add':
+        editableParty.quests.push(partyQuestId);
+        break;
+      case 'delete':
+        editableParty.quests.splice(
+          editableParty.quests.indexOf(partyQuestId),
+          1,
+        );
+        break;
+    }
+  }
 }
