@@ -93,4 +93,20 @@ export class PartiesService {
         break;
     }
   }
+
+  async updatePartyGames(
+    reason: 'add' | 'delete',
+    partyId: Types.ObjectId,
+    partyGameId: Types.ObjectId,
+  ) {
+    const editableParty = await this.getPartyById(partyId);
+    switch (reason) {
+      case 'add':
+        editableParty.games.push(partyGameId);
+        break;
+      case 'delete':
+        editableParty.games.splice(editableParty.games.indexOf(partyGameId), 1);
+        break;
+    }
+  }
 }
