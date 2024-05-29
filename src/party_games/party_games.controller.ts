@@ -32,7 +32,7 @@ export class PartyGamesController {
     return this.partyGamesService.createPartyGame(data, partyId);
   }
 
-  @Delete(':partyId/:partyGameId')
+  @Delete(':partyId')
   deletePartyGame(
     @Param('partyId') partyId: Types.ObjectId,
     @Body() partyGameId: Types.ObjectId,

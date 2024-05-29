@@ -19,6 +19,9 @@ export class Party {
 
   @Prop({ type: Types.ObjectId, ref: 'Quests' })
   quests: Types.ObjectId[];
+
+  @Prop({ type: Types.ObjectId, ref: 'Npcs' })
+  Npcs: Types.ObjectId[];
 }
 
 export const PartySchema = SchemaFactory.createForClass(Party);

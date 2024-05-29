@@ -109,4 +109,20 @@ export class PartiesService {
         break;
     }
   }
+
+  async updatePartyNpcs(
+    reason: 'add' | 'delete',
+    partyId: Types.ObjectId,
+    partyNpcId: Types.ObjectId,
+  ) {
+    const editableParty = await this.getPartyById(partyId);
+    switch (reason) {
+      case 'add':
+        editableParty.Npcs.push(partyNpcId);
+        break;
+      case 'delete':
+        editableParty.Npcs.splice(editableParty.Npcs.indexOf(partyNpcId), 1);
+        break;
+    }
+  }
 }

@@ -7,6 +7,7 @@ import { PartyPlaceModule } from './party_place/party_place.module';
 import { PartyMembersModule } from './party_members/party_members.module';
 import { PartyGamesModule } from './party_games/party_games.module';
 import { PartyQuestsModule } from './party_quests/party_quests.module';
+import { PartyNpcsModule } from './party_npcs/party_npcs.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { PartyQuestsModule } from './party_quests/party_quests.module';
     PartyMembersModule,
     PartyGamesModule,
     PartyQuestsModule,
+    PartyNpcsModule,
   ],
 })
 export class AppModule {}
