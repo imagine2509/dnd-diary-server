@@ -12,6 +12,7 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user-dto';
 import { UpdateUserDto } from './dto/update-user-dto';
+import { Types } from 'mongoose';
 
 @Controller('users')
 export class UsersController {
@@ -29,17 +30,17 @@ export class UsersController {
   }
 
   @Get(':userId')
-  findOne(@Param('userId') userId: string) {
+  findOne(@Param('userId') userId: Types.ObjectId) {
     return this.usersService.findUserById(userId);
   }
 
   @Patch(':userId')
-  update(@Param('userId') userId: string, @Body() data: UpdateUserDto) {
+  update(@Param('userId') userId: Types.ObjectId, @Body() data: UpdateUserDto) {
     return this.usersService.updateUser(userId, data);
   }
 
   @Delete(':userId')
-  remove(@Param('userId') userId: string) {
+  remove(@Param('userId') userId: Types.ObjectId) {
     return this.usersService.deleteUser(userId);
   }
 }

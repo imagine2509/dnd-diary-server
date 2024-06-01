@@ -42,6 +42,10 @@ export class PartyNpcsService {
   ): Promise<PartyNpc> {
     const deletedPartyNpc =
       await this.partyNpcModel.findByIdAndDelete(partyNpcId);
+    if (!deletedPartyNpc)
+      throw new NotFoundException(
+        `Party place with ID "${partyNpcId}" not found.`,
+      );
     await this.partiesService.updatePartyNpcs(
       'delete',
       partyId,

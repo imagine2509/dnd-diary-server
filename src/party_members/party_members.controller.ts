@@ -32,9 +32,12 @@ export class PartyMembersController {
     return this.partyMembersService.createPartyMember(data, partyId);
   }
 
-  @Delete(':partyMemberId')
-  delete(@Param('partyMemberId') partyMemberId: Types.ObjectId) {
-    return this.partyMembersService.deletePartyMember(partyMemberId);
+  @Delete(':partyId')
+  delete(
+    @Param('partyId') partyId: Types.ObjectId,
+    @Body() partyMemberId: Types.ObjectId,
+  ) {
+    return this.partyMembersService.deletePartyMember(partyId, partyMemberId);
   }
 
   @Patch(':partyMemberId')

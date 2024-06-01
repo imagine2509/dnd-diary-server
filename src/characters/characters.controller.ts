@@ -19,23 +19,29 @@ export class CharactersController {
 
   @Post(':userId')
   @UsePipes(new ValidationPipe())
-  create(@Param('userId') userId: string, @Body() data: CreateCharacterDto) {
+  create(
+    @Param('userId') userId: Types.ObjectId,
+    @Body() data: CreateCharacterDto,
+  ) {
     return this.charactersService.createCharacter(data, userId);
   }
 
   @Get(':userId')
-  findAll(@Param('userId') userId: string) {
+  findAll(@Param('userId') userId: Types.ObjectId) {
     return this.charactersService.findAllUserCharacters(userId);
   }
 
-  @Delete(':characterId')
-  delete(@Param('characterId') characterId: string) {
-    return this.charactersService.deleteCharacter(characterId);
+  @Delete(':userId')
+  delete(
+    @Param('userId') userId: Types.ObjectId,
+    @Body() characterId: Types.ObjectId,
+  ) {
+    return this.charactersService.deleteCharacter(userId, characterId);
   }
 
   @Patch(':characterId')
   changeLevel(
-    @Param('characterId') characterId: string,
+    @Param('characterId') characterId: Types.ObjectId,
     @Body()
     data: { reason: 'levelUp' | 'levelDown' | 'edit'; newLevel?: number },
   ) {
@@ -44,7 +50,7 @@ export class CharactersController {
 
   @Patch(':characterId/parties')
   updateCharacterParties(
-    @Param('characterId') characterId: string,
+    @Param('characterId') characterId: Types.ObjectId,
     @Body()
     data: { reason: 'add' | 'delete'; partyId: Types.ObjectId },
   ) {

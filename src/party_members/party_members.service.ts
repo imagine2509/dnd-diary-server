@@ -40,9 +40,21 @@ export class PartyMembersService {
     return createdPartyMember;
   }
 
-  async deletePartyMember(partyMemberId: Types.ObjectId): Promise<PartyMember> {
+  async deletePartyMember(
+    partyId: Types.ObjectId,
+    partyMemberId: Types.ObjectId,
+  ): Promise<PartyMember> {
     const deletedPartyMember =
       await this.partyMemberModel.findByIdAndDelete(partyMemberId);
+    if (!deletedPartyMember)
+      throw new NotFoundException(
+        `Party place with ID "${partyMemberId}" not found.`,
+      );
+    await this.partiesService.updatePartyMembers(
+      'delete',
+      partyId,
+      partyMemberId,
+    );
     return deletedPartyMember;
   }
 
@@ -52,6 +64,10 @@ export class PartyMembersService {
   ): Promise<PartyMember> {
     const editedPartyMember =
       await this.partyMemberModel.findById(partyMemberId);
+    if (!editedPartyMember)
+      throw new NotFoundException(
+        `Party place with ID "${partyMemberId}" not found.`,
+      );
     editedPartyMember.notes = data.notes;
     await editedPartyMember.save();
     return editedPartyMember;

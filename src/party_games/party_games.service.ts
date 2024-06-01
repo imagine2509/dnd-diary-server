@@ -42,6 +42,10 @@ export class PartyGamesService {
   ): Promise<PartyGame> {
     const deletedPartyGame =
       await this.partyGameModel.findByIdAndDelete(partyGameId);
+    if (!deletedPartyGame)
+      throw new NotFoundException(
+        `Party place with ID "${partyGameId}" not found.`,
+      );
     await this.partiesService.updatePartyGames(
       'delete',
       partyId,
@@ -59,6 +63,10 @@ export class PartyGamesService {
       partyGame,
       { new: true },
     );
+    if (!updatedPartyGame)
+      throw new NotFoundException(
+        `Party place with ID "${partyGameId}" not found.`,
+      );
     return updatedPartyGame;
   }
 }

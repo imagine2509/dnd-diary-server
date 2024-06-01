@@ -13,7 +13,7 @@ export class CharactersService {
     private readonly usersService: UsersService,
   ) {}
 
-  async getCharacterById(id: string): Promise<Character> {
+  async getCharacterById(id: Types.ObjectId): Promise<Character> {
     const character = await this.characterModel.findById(id).exec();
     if (!character)
       throw new NotFoundException(`Character with ID "${id}" not found.`);
@@ -22,7 +22,7 @@ export class CharactersService {
 
   async createCharacter(
     character: Character,
-    userId: string,
+    userId: Types.ObjectId,
   ): Promise<Character> {
     const user = await this.usersService.findUserById(userId);
     if (!user) {
@@ -39,7 +39,7 @@ export class CharactersService {
     return createdCharacter;
   }
 
-  async findAllUserCharacters(userId: string): Promise<Character[]> {
+  async findAllUserCharacters(userId: Types.ObjectId): Promise<Character[]> {
     const user = await this.usersService.findUserById(userId);
     const characters = await this.characterModel.find({
       _id: { $in: user.characterIds },
@@ -47,14 +47,26 @@ export class CharactersService {
     return characters;
   }
 
-  async deleteCharacter(characterId: string): Promise<Character> {
+  async deleteCharacter(
+    userId: Types.ObjectId,
+    characterId: Types.ObjectId,
+  ): Promise<Character> {
     const deletedCharacter =
       await this.characterModel.findByIdAndDelete(characterId);
+    if (!deletedCharacter)
+      throw new NotFoundException(
+        `Party quest with ID "${characterId}" not found.`,
+      );
+    await this.usersService.updateUserCharactersIds(
+      'delete',
+      userId,
+      characterId,
+    );
     return deletedCharacter;
   }
 
   async changeCharacterLevel(
-    characterId: string,
+    characterId: Types.ObjectId,
     data: { reason: 'levelUp' | 'levelDown' | 'edit'; newLevel?: number },
   ): Promise<Character> {
     const editedCharacter = await this.characterModel.findById(characterId);
@@ -78,20 +90,26 @@ export class CharactersService {
 
   async updateCharacterParties(
     reason: 'add' | 'delete',
-    characterId: string,
+    characterId: Types.ObjectId,
     partyId: Types.ObjectId,
-  ) {
+  ): Promise<Character> {
     const editableCharacter = await this.getCharacterById(characterId);
     switch (reason) {
       case 'add':
-        editableCharacter.partyIds.push(partyId);
+        this.characterModel.findByIdAndUpdate(
+          characterId,
+          { $push: { partyIds: partyId } },
+          { new: true },
+        );
         break;
       case 'delete':
-        editableCharacter.partyIds.splice(
-          editableCharacter.partyIds.indexOf(partyId),
-          1,
+        this.characterModel.findByIdAndUpdate(
+          characterId,
+          { $push: { partyId } },
+          { new: true },
         );
         break;
     }
+    return editableCharacter;
   }
 }

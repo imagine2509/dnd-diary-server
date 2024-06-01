@@ -24,7 +24,7 @@ export class PartiesController {
   @Post(':characterId')
   @UsePipes(new ValidationPipe())
   create(
-    @Param('characterId') characterId: string,
+    @Param('characterId') characterId: Types.ObjectId,
     @Body() data: CreatePartyDto,
   ) {
     return this.partiesService.createParty(data, characterId);

@@ -42,10 +42,14 @@ export class PartyQuestsService {
   ): Promise<PartyQuest> {
     const deletedPartyQuest =
       await this.partyQuestModel.findByIdAndDelete(partyQuestId);
+    if (!deletedPartyQuest)
+      throw new NotFoundException(
+        `Party quest with ID "${partyQuestId}" not found.`,
+      );
     await this.partiesService.updatePartyQuests(
       'delete',
       partyId,
-      deletedPartyQuest.id,
+      deletedPartyQuest._id,
     );
     return deletedPartyQuest;
   }

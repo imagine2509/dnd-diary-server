@@ -36,13 +36,21 @@ export class PartyPlaceService {
     return createdPartyPlace;
   }
 
-  async deletePartyPlace(partyPlaceId: Types.ObjectId): Promise<PartyPlace> {
+  async deletePartyPlace(
+    partyId: Types.ObjectId,
+    partyPlaceId: Types.ObjectId,
+  ): Promise<PartyPlace> {
     const deletedPartyPlace =
       await this.partyPlaceModel.findByIdAndDelete(partyPlaceId);
     if (!deletedPartyPlace)
       throw new NotFoundException(
         `Party place with ID "${partyPlaceId}" not found.`,
       );
+    await this.partiesService.updatePartyPlaces(
+      'delete',
+      partyId,
+      partyPlaceId,
+    );
     return deletedPartyPlace;
   }
 

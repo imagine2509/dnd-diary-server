@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/users.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { CreateUserDto } from './dto/create-user-dto';
 import { UpdateUserDto } from './dto/update-user-dto';
 
@@ -16,7 +16,7 @@ export class UsersService {
     return users;
   }
 
-  async findUserById(userId: string): Promise<User> {
+  async findUserById(userId: Types.ObjectId): Promise<User> {
     const user = await this.userModel.findById(userId).exec();
     if (!user)
       throw new NotFoundException(`User with ID "${userId}" not found.`);
@@ -28,7 +28,7 @@ export class UsersService {
     return createdUser;
   }
 
-  async updateUser(userId: string, data: UpdateUserDto): Promise<User> {
+  async updateUser(userId: Types.ObjectId, data: UpdateUserDto): Promise<User> {
     const updatedUser = await this.userModel.findByIdAndUpdate(userId, data, {
       new: true,
     });
@@ -39,10 +39,39 @@ export class UsersService {
     return updatedUser;
   }
 
-  async deleteUser(userId: string): Promise<User> {
+  async deleteUser(userId: Types.ObjectId): Promise<User> {
     const deletedUser = await this.userModel.findByIdAndDelete(userId);
     if (!deletedUser)
       throw new NotFoundException(`User with ID "${userId}" not found.`);
     return deletedUser;
+  }
+
+  async updateUserCharactersIds(
+    reason: 'add' | 'delete',
+    userId: Types.ObjectId,
+    characterId: Types.ObjectId,
+  ): Promise<User> {
+    if (reason === 'add') {
+      const updatedUser = await this.userModel.findByIdAndUpdate(
+        userId,
+        { $push: { characterIds: characterId } },
+        { new: true },
+      );
+
+      if (!updatedUser) {
+        throw new NotFoundException(`User with ID "${userId}" not found.`);
+      }
+      return updatedUser;
+    } else {
+      const updatedUser = await this.userModel.findByIdAndUpdate(
+        userId,
+        { $pull: { characterIds: characterId } },
+        { new: true },
+      );
+      if (!updatedUser) {
+        throw new NotFoundException(`User with ID "${userId}" not found.`);
+      }
+      return updatedUser;
+    }
   }
 }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -29,6 +30,14 @@ export class PartyPlaceController {
     @Body() data: CreatePartyPlaceDto,
   ) {
     return this.partyPlaceService.createPartyPlace(data, partyId);
+  }
+
+  @Delete(':partyId')
+  deletePartyPlace(
+    @Param('partyId') partyId: Types.ObjectId,
+    @Body('partyPlaceId') partyPlaceId: Types.ObjectId,
+  ) {
+    return this.partyPlaceService.deletePartyPlace(partyId, partyPlaceId);
   }
 
   @Patch(':partyPlaceId')

@@ -21,7 +21,7 @@ export class PartiesService {
 
   async createParty(
     party: CreatePartyDto,
-    characterId: string,
+    characterId: Types.ObjectId,
   ): Promise<Party> {
     const createdParty = await this.partyModel.create(party);
     this.characterService.updateCharacterParties(
