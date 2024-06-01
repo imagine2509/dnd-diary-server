@@ -24,7 +24,7 @@ export class PartiesService {
     characterId: Types.ObjectId,
   ): Promise<Party> {
     const createdParty = await this.partyModel.create(party);
-    this.characterService.updateCharacterParties(
+    await this.characterService.updateCharacterParties(
       'add',
       characterId,
       createdParty._id,
@@ -32,8 +32,16 @@ export class PartiesService {
     return createdParty;
   }
 
-  async deleteParty(partyId: Types.ObjectId): Promise<Party> {
+  async deleteParty(
+    characterId: Types.ObjectId,
+    partyId: Types.ObjectId,
+  ): Promise<Party> {
     const deletedParty = await this.partyModel.findByIdAndDelete(partyId);
+    await this.characterService.updateCharacterParties(
+      'delete',
+      characterId,
+      partyId,
+    );
     return deletedParty;
   }
 
@@ -41,16 +49,20 @@ export class PartiesService {
     reason: 'add' | 'delete',
     partyId: Types.ObjectId,
     partyPlaceId: Types.ObjectId,
-  ) {
-    const editableParty = await this.getPartyById(partyId);
+  ): Promise<void> {
     switch (reason) {
       case 'add':
-        editableParty.partyPlaces.push(partyPlaceId);
+        await this.partyModel.findByIdAndUpdate(
+          partyId,
+          { $push: { partyPlaces: partyPlaceId } },
+          { new: true },
+        );
         break;
       case 'delete':
-        editableParty.partyPlaces.splice(
-          editableParty.partyPlaces.indexOf(partyPlaceId),
-          1,
+        await this.partyModel.findByIdAndUpdate(
+          partyId,
+          { $pull: { partyPlaces: partyPlaceId } },
+          { new: true },
         );
         break;
     }
@@ -60,16 +72,20 @@ export class PartiesService {
     reason: 'add' | 'delete',
     partyId: Types.ObjectId,
     partyMemberId: Types.ObjectId,
-  ) {
-    const editableParty = await this.getPartyById(partyId);
+  ): Promise<void> {
     switch (reason) {
       case 'add':
-        editableParty.partyMembers.push(partyMemberId);
+        await this.partyModel.findByIdAndUpdate(
+          partyId,
+          { $push: { partyMembers: partyMemberId } },
+          { new: true },
+        );
         break;
       case 'delete':
-        editableParty.partyMembers.splice(
-          editableParty.partyMembers.indexOf(partyMemberId),
-          1,
+        await this.partyModel.findByIdAndUpdate(
+          partyId,
+          { $pull: { partyMembers: partyMemberId } },
+          { new: true },
         );
         break;
     }
@@ -79,16 +95,20 @@ export class PartiesService {
     reason: 'add' | 'delete',
     partyId: Types.ObjectId,
     partyQuestId: Types.ObjectId,
-  ) {
-    const editableParty = await this.getPartyById(partyId);
+  ): Promise<void> {
     switch (reason) {
       case 'add':
-        editableParty.quests.push(partyQuestId);
+        await this.partyModel.findByIdAndUpdate(
+          partyId,
+          { $push: { partyQuests: partyQuestId } },
+          { new: true },
+        );
         break;
       case 'delete':
-        editableParty.quests.splice(
-          editableParty.quests.indexOf(partyQuestId),
-          1,
+        await this.partyModel.findByIdAndUpdate(
+          partyId,
+          { $push: { partyQuests: partyQuestId } },
+          { new: false },
         );
         break;
     }
@@ -98,14 +118,21 @@ export class PartiesService {
     reason: 'add' | 'delete',
     partyId: Types.ObjectId,
     partyGameId: Types.ObjectId,
-  ) {
-    const editableParty = await this.getPartyById(partyId);
+  ): Promise<void> {
     switch (reason) {
       case 'add':
-        editableParty.games.push(partyGameId);
+        await this.partyModel.findByIdAndUpdate(
+          partyId,
+          { $push: { partyGames: partyGameId } },
+          { new: true },
+        );
         break;
       case 'delete':
-        editableParty.games.splice(editableParty.games.indexOf(partyGameId), 1);
+        await this.partyModel.findByIdAndUpdate(
+          partyId,
+          { $pull: { partyGames: partyGameId } },
+          { new: true },
+        );
         break;
     }
   }
@@ -114,14 +141,21 @@ export class PartiesService {
     reason: 'add' | 'delete',
     partyId: Types.ObjectId,
     partyNpcId: Types.ObjectId,
-  ) {
-    const editableParty = await this.getPartyById(partyId);
+  ): Promise<void> {
     switch (reason) {
       case 'add':
-        editableParty.Npcs.push(partyNpcId);
+        await this.partyModel.findByIdAndUpdate(
+          partyId,
+          { $push: { partyNpcs: partyNpcId } },
+          { new: true },
+        );
         break;
       case 'delete':
-        editableParty.Npcs.splice(editableParty.Npcs.indexOf(partyNpcId), 1);
+        await this.partyModel.findByIdAndUpdate(
+          partyId,
+          { $push: { partyNpcs: partyNpcId } },
+          { new: true },
+        );
         break;
     }
   }

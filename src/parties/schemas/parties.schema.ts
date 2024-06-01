@@ -14,14 +14,14 @@ export class Party {
   @Prop({ type: Types.ObjectId, ref: 'PartyMembers' })
   partyMembers: Types.ObjectId[];
 
-  @Prop({ type: Types.ObjectId, ref: 'Games' })
-  games: Types.ObjectId[];
+  @Prop({ type: Types.ObjectId, ref: 'PartyGames' })
+  partyGames: Types.ObjectId[];
 
-  @Prop({ type: Types.ObjectId, ref: 'Quests' })
-  quests: Types.ObjectId[];
+  @Prop({ type: Types.ObjectId, ref: 'PartyQuests' })
+  partyQuests: Types.ObjectId[];
 
-  @Prop({ type: Types.ObjectId, ref: 'Npcs' })
-  Npcs: Types.ObjectId[];
+  @Prop({ type: Types.ObjectId, ref: 'PartyNpcs' })
+  partyNpcs: Types.ObjectId[];
 }
 
 export const PartySchema = SchemaFactory.createForClass(Party);

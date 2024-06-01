@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Character } from './schemas/character.schema';
 import { Model, Types } from 'mongoose';
 import { UsersService } from 'src/users/users.service';
-import { UpdateUserDto } from 'src/users/dto/update-user-dto';
 
 @Injectable()
 export class CharactersService {
@@ -24,18 +23,12 @@ export class CharactersService {
     character: Character,
     userId: Types.ObjectId,
   ): Promise<Character> {
-    const user = await this.usersService.findUserById(userId);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
     const createdCharacter = await this.characterModel.create(character);
-    const newCharacterIds = Array.isArray(user.characterIds)
-      ? [...user.characterIds, createdCharacter._id]
-      : [createdCharacter._id];
-    const updateUserDto: UpdateUserDto = {
-      characterIds: newCharacterIds,
-    };
-    await this.usersService.updateUser(userId, updateUserDto);
+    await this.usersService.updateUserCharactersIds(
+      'add',
+      userId,
+      createdCharacter._id,
+    );
     return createdCharacter;
   }
 

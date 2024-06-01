@@ -30,8 +30,11 @@ export class PartiesController {
     return this.partiesService.createParty(data, characterId);
   }
 
-  @Delete(':partyId')
-  delete(@Param('partyId') partyId: Types.ObjectId) {
-    return this.partiesService.deleteParty(partyId);
+  @Delete(':characterId')
+  delete(
+    @Param('characterId') characterId: Types.ObjectId,
+    @Body() partyId: Types.ObjectId,
+  ) {
+    return this.partiesService.deleteParty(characterId, partyId);
   }
 }
