@@ -49,7 +49,7 @@ export class PartyGamesService {
     await this.partiesService.updatePartyGames(
       'delete',
       partyId,
-      deletedPartyGame.id,
+      deletedPartyGame._id,
     );
     return deletedPartyGame;
   }
