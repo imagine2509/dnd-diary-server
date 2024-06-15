@@ -23,6 +23,19 @@ export class UsersService {
     return user;
   }
 
+  async findUserByUsernameOrEmail(usernameOrEmail: string) {
+    const user = await this.userModel
+      .findOne({
+        $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
+      })
+      .exec();
+    if (!user)
+      throw new NotFoundException(
+        `User with username or email "${usernameOrEmail}" not found.`,
+      );
+    return user;
+  }
+
   async createUser(data: CreateUserDto): Promise<User> {
     const createdUser = await this.userModel.create(data);
     return createdUser;

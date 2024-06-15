@@ -8,10 +8,13 @@ import { PartyMembersModule } from './party_members/party_members.module';
 import { PartyGamesModule } from './party_games/party_games.module';
 import { PartyQuestsModule } from './party_quests/party_quests.module';
 import { PartyNpcsModule } from './party_npcs/party_npcs.module';
+import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017/dnd-diary-database'),
+    ConfigModule.forRoot({ isGlobal: true }),
+    MongooseModule.forRoot(process.env.DATABASE_URL),
     UsersModule,
     CharactersModule,
     PartiesModule,
@@ -20,6 +23,7 @@ import { PartyNpcsModule } from './party_npcs/party_npcs.module';
     PartyGamesModule,
     PartyQuestsModule,
     PartyNpcsModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
