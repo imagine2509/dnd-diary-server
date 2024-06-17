@@ -10,6 +10,9 @@ import { PartyQuestsModule } from './party_quests/party_quests.module';
 import { PartyNpcsModule } from './party_npcs/party_npcs.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { AppController } from './app.controller';
+import { AuthService } from './auth/auth.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -25,5 +28,8 @@ import { ConfigModule } from '@nestjs/config';
     PartyNpcsModule,
     AuthModule,
   ],
+  controllers: [AppController],
+  providers: [AuthService, JwtService],
 })
+
 export class AppModule {}
