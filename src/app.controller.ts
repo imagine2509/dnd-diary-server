@@ -11,11 +11,8 @@ import {
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 import { AuthService } from './auth/auth.service';
-
-export interface CustomRequest extends Request {
-  usernameOrEmail: string;
-  password: string;
-}
+import { User } from "./users/schemas/users.schema";
+import { Types } from "mongoose";
 
 @Dependencies(AuthService)
 @Controller()
@@ -25,14 +22,14 @@ export class AppController {
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
   @Bind(Request())
-  async login(req: CustomRequest) {
-    return this.authService.login(req.usernameOrEmail, req.password);
+  async login(req: { usernameOrEmail: string; password: string; }) {
+    return this.authService.validateUser(req.usernameOrEmail, req.password);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   @Bind(Request())
-  getProfile(req: CustomRequest) {
-    return req.usernameOrEmail;
+  getProfile(req: User & {   _id: Types.ObjectId }) {
+    return req;
   }
 }
