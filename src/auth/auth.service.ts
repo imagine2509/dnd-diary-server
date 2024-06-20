@@ -5,7 +5,6 @@ import { UsersService } from 'src/users/users.service';
 import { User } from '../users/schemas/users.schema';
 import { AccessToken } from './auth.types';
 import { RegisterRequestDto } from './dto/register-request-dto';
-import * as process from 'node:process';
 import { Types } from 'mongoose';
 
 @Injectable()
