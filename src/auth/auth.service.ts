@@ -9,6 +9,7 @@ import { UsersService } from 'src/users/users.service';
 import { UserDocument } from '../users/schemas/users.schema';
 import { AccessToken } from './auth.types';
 import { RegisterRequestDto } from './dto/register-request-dto';
+import * as process from 'node:process';
 
 @Injectable()
 export class AuthService {
@@ -23,10 +24,11 @@ export class AuthService {
   ): Promise<UserDocument> {
     const user =
       await this.usersService.findUserByUsernameOrEmail(usernameOrEmail);
+    console.log(user);
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
-    const isMatch: boolean = bcrypt.compareSync(password, user.password);
+    const isMatch: boolean = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       throw new UnauthorizedException('Password does not match');
     }
@@ -39,7 +41,7 @@ export class AuthService {
   }
 
   async register(user: RegisterRequestDto): Promise<AccessToken> {
-    const existingUser = this.usersService.findUserByUsernameOrEmail(
+    const existingUser = await this.usersService.findUserByUsernameOrEmail(
       user.email,
     );
     if (existingUser) {
@@ -47,7 +49,7 @@ export class AuthService {
     }
     const hashedPassword = await bcrypt.hash(
       user.password,
-      process.env.SALT_ROUNDS || 10,
+      Number(process.env.SALT_ROUNDS) || 10,
     );
     const newUser = {
       ...user,
