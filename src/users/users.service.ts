@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from './schemas/users.schema';
-import { Model, Types } from 'mongoose';
+import { UserDocument, User } from './schemas/users.schema';
+import { Types, Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user-dto';
 import { UpdateUserDto } from './dto/update-user-dto';
 
@@ -16,23 +16,26 @@ export class UsersService {
     return users;
   }
 
-  async findUserById(userId: Types.ObjectId): Promise<User> {
+  async findUserById(userId: Types.ObjectId): Promise<UserDocument | null> {
     const user = await this.userModel.findById(userId).exec();
-    if (!user)
-      throw new NotFoundException(`User with ID "${userId}" not found.`);
+    // if (!user)
+    //   throw new NotFoundException(`User with ID "${userId}" not found.`);
     return user;
   }
 
-  async findUserByUsernameOrEmail(usernameOrEmail: string) {
+  async findUserByUsernameOrEmail(
+    usernameOrEmail: string,
+  ): Promise<UserDocument | null> {
     const user = await this.userModel
       .findOne({
         $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
       })
       .exec();
-    if (!user)
-      throw new NotFoundException(
-        `User with username or email "${usernameOrEmail}" not found.`,
-      );
+
+    // if (!user)
+    //   throw new NotFoundException(
+    //     `User with username or email "${usernameOrEmail}" not found.`,
+    //   );
     return user;
   }
 

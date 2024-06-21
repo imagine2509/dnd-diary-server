@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CharactersModule } from './characters/characters.module';
@@ -13,6 +13,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AuthService } from './auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
+import { mappingMiddleware } from './mapping.controller';
 
 @Module({
   imports: [
@@ -31,5 +32,10 @@ import { JwtService } from '@nestjs/jwt';
   controllers: [AppController],
   providers: [AuthService, JwtService],
 })
-
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(mappingMiddleware)
+      .forRoutes({ path: 'auth/login', method: RequestMethod.POST });
+  }
+}
