@@ -24,7 +24,6 @@ export class AuthService {
   ): Promise<UserDocument> {
     const user =
       await this.usersService.findUserByUsernameOrEmail(usernameOrEmail);
-    console.log(user);
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
