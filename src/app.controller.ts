@@ -1,7 +1,6 @@
 import {
   Controller,
   Dependencies,
-  Bind,
   Get,
   Request,
   Post,
@@ -21,15 +20,13 @@ export class AppController {
 
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
-  @Bind(Request())
-  async login(req: { usernameOrEmail: string; password: string }) {
+  async login(@Request() req: { usernameOrEmail: string; password: string }) {
     return this.authService.validateUser(req.usernameOrEmail, req.password);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  @Bind(Request())
-  getProfile(req: User & { _id: Types.ObjectId }) {
+  getProfile(@Request() req: User & { _id: Types.ObjectId }) {
     return req;
   }
 }
