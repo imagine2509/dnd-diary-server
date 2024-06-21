@@ -10,8 +10,7 @@ import {
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 import { AuthService } from './auth/auth.service';
-import { User } from './users/schemas/users.schema';
-import { Types } from 'mongoose';
+import { UserDocument } from './users/schemas/users.schema';
 
 @Dependencies(AuthService)
 @Controller()
@@ -26,7 +25,7 @@ export class AppController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Request() req: User & { _id: Types.ObjectId }) {
+  getProfile(@Request() req: UserDocument) {
     return req;
   }
 }

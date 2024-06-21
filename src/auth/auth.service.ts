@@ -9,7 +9,6 @@ import { UsersService } from 'src/users/users.service';
 import { UserDocument } from '../users/schemas/users.schema';
 import { AccessToken } from './auth.types';
 import { RegisterRequestDto } from './dto/register-request-dto';
-// import { Types } from 'mongoose';
 
 @Injectable()
 export class AuthService {
